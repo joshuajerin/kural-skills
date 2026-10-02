@@ -1,0 +1,12 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "kural-dry-run",
+  "version": "0.1.0",
+  "description": "Validate bounded Kural skill requests in dry-run mode only. No robot connection or motion.",
+  "keywords": [
+    "kural",
+    "dry-run",
+    "robot-skills",
+    "mcp"
+  ]
+}

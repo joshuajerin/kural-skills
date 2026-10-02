@@ -9,8 +9,12 @@ description = "Small callable robot skills for Kural"
 requires-python = ">=3.11"
 dependencies = []
 
+[project.optional-dependencies]
+mcp = ["mcp>=1.26,<2"]
+
 [project.scripts]
 kural-skills = "kural_skills.cli:main"
+kural-skills-mcp = "kural_skills.mcp_server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

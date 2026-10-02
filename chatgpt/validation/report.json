@@ -1,0 +1,72 @@
+{
+  "checked_at_utc": "2026-10-02T04:02:27.647418+00:00",
+  "scope": "chatgpt/ portable plugin documents only; not provider installation or robot execution",
+  "sources": [
+    {
+      "url": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+      "http_status": 200,
+      "final_url": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+      "snapshot": "plugin.schema.json",
+      "sha256": "0a4aad95ce337878ad38802ebf0daa3fde76abe3f65400c86bcbb1ec0b3ab883"
+    },
+    {
+      "url": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+      "http_status": 200,
+      "final_url": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+      "snapshot": "mcp.schema.json",
+      "sha256": "6539175bfcdf43085855183e86da40ea94b166547a72b47ae9a0a390516d3acb"
+    },
+    {
+      "url": "https://developers.openai.com/plugins/build/plugins",
+      "http_status": 200,
+      "purpose": "Official OpenAI packaging guidance; root plugin.json, skills/ and optional mcp.json confirmed"
+    }
+  ],
+  "checks": {
+    "manifest_schema_validation": {
+      "plugin.json": "pass",
+      "mcp.json": "pass",
+      "validator": "jsonschema 4.26.0 Draft202012Validator in project .venv",
+      "schema_self_validation": "pass"
+    },
+    "skill_frontmatter": {
+      "status": "pass",
+      "parser": "PyYAML safe_load",
+      "name": "kural-dry-run",
+      "description_present": true
+    },
+    "stdio_configuration": {
+      "command": "kural-skills-mcp",
+      "args": [],
+      "absolute_machine_paths": false,
+      "remote_placeholder_url": false,
+      "secrets_or_auth_configured": false
+    },
+    "packaging": {
+      "status": "pass",
+      "deterministic_two_builds": true,
+      "sha256": "4c5c2f82f01c5c54cca56ca2c89434c9791f644e8419a21bd54908b167611486",
+      "entries": [
+        "README.md",
+        "mcp.json",
+        "plugin.json",
+        "skills/kural-dry-run/SKILL.md"
+      ],
+      "inside_folder_output_rejected": true,
+      "inside_folder_rejection_exit_code": 2,
+      "zip_assets_included": false
+    }
+  },
+  "adapter_status": "local stdio adapter verified separately: 46 native tests; provider installation not verified",
+  "not_verified": [
+    "MCP initialization/discovery/call by this folder",
+    "installed entrypoint",
+    "ChatGPT/Codex client compatibility or plugin activation",
+    "account/workspace eligibility",
+    "Secure MCP Tunnel",
+    "authentication or hosting",
+    "public directory review",
+    "simulation or hardware movement",
+    "physical stop"
+  ]
+}
