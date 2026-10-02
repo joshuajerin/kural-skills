@@ -1,0 +1,17 @@
+# Local secrets and environments
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+
+# Generated local files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+
+# Large local artifacts
+artifacts/
+recordings/
+models/
