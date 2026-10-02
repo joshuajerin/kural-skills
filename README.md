@@ -1,8 +1,7 @@
 # Kural Skills
 
 <p align="center">
-  <strong>Bounded robot-skill requests for people, Python programs, and AI agents.</strong><br>
-  One small catalog. Clear units. Honest dry-run results. Built for Kural.
+  <img src="assets/kural-skills-flow.svg" alt="Kural Skills request flow: intent passes through catalog validation to a dry-run result; the live robot boundary is locked." width="100%">
 </p>
 
 <p align="center">
@@ -11,10 +10,6 @@
   <a href="docs/RUNTIME-CONTRACT.md">runtime boundary</a> ·
   <a href="https://github.com/joshuajerin/kural-skills">GitHub</a>
 </p>
-
-> **Status — dry run only.** Kural Skills validates and records bounded requests.
-> It does **not** connect to a robot, simulator, or live DIMOS runtime. A result
-> cannot prove motion, arrival, or a physical stop.
 
 ---
 
