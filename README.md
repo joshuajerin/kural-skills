@@ -1,8 +1,11 @@
 # Kural Skills
 
 <p align="center">
-  <img src="assets/kural-skills-flow.svg" alt="Kural Skills request flow: intent passes through catalog validation to a dry-run result; the live robot boundary is locked." width="100%">
+  <img src="assets/kural-robot-preview.png" alt="Actual Kural robot preview from the Kural project." width="56%">
+  <img src="assets/kural-brand.png" alt="Kural — Modular Mobile Manipulation." width="42%">
 </p>
+
+<p align="center"><sub>Actual Kural robot preview and existing Kural brand artwork.</sub></p>
 
 <p align="center">
   <a href="docs/PHASE1.md">API guide</a> ·
