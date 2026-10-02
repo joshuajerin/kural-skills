@@ -72,7 +72,9 @@ a second robot model. Large assets, recordings, and secrets stay outside Git.
 
 Read [Phase 1 usage](docs/PHASE1.md), [runtime integration requirements](docs/RUNTIME-CONTRACT.md),
 [SDK inspiration](docs/SDK-INSPIRATION.md), and [verification](docs/VERIFICATION.md).
-For ChatGPT and Grok options, see [AI-agent integration research](docs/AI-AGENT-INTEGRATIONS.md).
+For the new ChatGPT Plugins platform, see [AI-agent integration research](docs/AI-AGENT-INTEGRATIONS.md).
+For the actual Grok Bot, see [exact Grok tools and integrations](docs/GROK-TOOLS-INTEGRATIONS.md).
+[Exa setup](docs/EXA-SETUP.md) records verified search access in the agent environment.
 New skills start with a definition: purpose, inputs/outputs, prerequisites,
 behavior, cancellation/failure, tests, and an honest status. Add code in small,
 reviewable steps.

@@ -2,9 +2,11 @@
 
 ## Scope and evidence
 
-Research checked on 2026-10-02 UTC. This document interprets “chatgpt dot” as
-**ChatGPT**; it does not identify a separate product by that name. Confirm the
-intended surface before implementing an adapter.
+Research checked on 2026-10-02 UTC. The requested OpenAI surface is the
+**current Plugins platform for ChatGPT and Codex**, confirmed from the current
+`/plugins` documentation. It is not the retired ChatGPT plugin beta or custom
+GPT Actions. The earlier Actions-first/API-first recommendation did not match
+this request; those paths remain optional background, not the proposed setup.
 
 This is a proposal based on official HTTPS documentation and a read-only review
 of this repository. No provider API inference request, credentials, dependency
@@ -18,23 +20,27 @@ custom JSON-lines session, **not an MCP server**. `GatewayBackend` requires an
 externally supplied future gateway; it is not an existing DIMOS bridge.
 Read [README](../README.md) and [RUNTIME-CONTRACT](RUNTIME-CONTRACT.md).
 
-## Recommendation
+## Recommendation: current OpenAI Plugins
 
-Start with **API function calling and the existing local dry-run SDK**. Use
-OpenAI or xAI as the language model, but let a local application validate and
-execute the requested function. This needs no inbound public robot endpoint,
-MCP server, custom GPT, or new control framework. A future paid provider request
-still needs separately approved credentials and a supported model.
+Use **Plugins**, the current installable package and universal directory shared
+by ChatGPT and Codex [O12, O14]. A plugin can contain skills, an MCP server, or
+both. Custom UI is optional. The official quickstart connects an MCP server as
+a personal plugin and invokes it with `@` in **ChatGPT Work** on the web [O15].
+Availability still depends on the user's account and workspace policy [O10].
 
-Then choose the user interface:
+For Kural, propose one small **dry-run-only skill plus a thin real MCP adapter**
+using the existing SDK. Do not build a replacement SDK, custom GPT Actions, or
+an unrelated API application instead. Start with a skills-only package if the
+agreed first goal is explaining/planning requests, not executing the SDK. A
+skills-only plugin does not by itself connect ChatGPT to the local robot or
+Python SDK. Obtain approval before any adapter, installation, tunnel or hosting.
 
-- **ChatGPT custom GPT:** authenticated HTTPS REST adapter plus OpenAPI Actions.
-- **ChatGPT app/MCP:** real MCP adapter, when ChatGPT-native tool discovery or
-  reuse across MCP hosts is needed. Custom graphical UI is optional.
-- **Grok:** verified path is an application using the **xAI API**, with local
-  function calling first; remote MCP is an optional later path.
-- **Consumer Grok in X/grok.com:** arbitrary third-party robot-tool installation
-  was not verified. Do not present API support as consumer Grok bot support.
+For the actual Grok Bot, use its documented custom MCP integration, not an xAI
+API replacement. Team Bots document Setup → Plugins → Add with Remote HTTPS or
+Command modes. General connector discovery is through Marketplace. Grok at
+grok.com separately documents custom MCP connectors. See the sourced
+[exact Grok tools and integrations](GROK-TOOLS-INTEGRATIONS.md) for those distinct
+products, exact steps, and remaining account-level limits.
 
 None of these interfaces makes live Kural execution safe or available.
 
@@ -44,26 +50,144 @@ None of these interfaces makes live Kural execution safe or available.
 | --- | --- | --- | --- |
 | OpenAI API function calling | Model returns named calls with JSON arguments; your application executes them and returns outputs [O1]. | Small local allowlisted dispatcher to `KuralSkills`; provider schema conversion. | Not an installation inside consumer ChatGPT. Model/API/schema support must be tested. |
 | OpenAI Agents SDK | Python function tools and MCP integrations, including local stdio, SSE and Streamable HTTP [O2, O3]. | Wrap existing SDK methods, or connect a real MCP server. | Optional orchestration; not needed for the first demo. Not a robot safety owner. |
-| ChatGPT custom GPT Actions | REST API calls described with OpenAPI; None, API key or OAuth authentication [O4–O7]. | HTTPS REST service with OpenAPI and operation lifecycle routes. | 45-second request timeout; TLS 1.2+ on port 443 with valid public certificate; no custom headers [O7]. Account/workspace availability must be checked. |
-| ChatGPT apps / MCP | Developer mode supports read and write MCP tools; SSE and streaming HTTP [O8]. SDK documentation describes controlled MCP actions and optional UI [O9]. | Actual MCP initialization, tool listing/calling, transport, auth and structured results. | Developer mode docs list Pro, Plus, Business, Enterprise and Education on web; workspace policy can restrict access [O8, O10]. No Kural adapter is implemented or tested. |
+| ChatGPT custom GPT Actions (**optional, not requested**) | REST API calls described with OpenAPI; None, API key or OAuth authentication [O4–O7]. | HTTPS REST service with OpenAPI and operation lifecycle routes. | 45-second request timeout; TLS 1.2+ on port 443 with valid public certificate; no custom headers [O7]. Account/workspace availability must be checked. |
+| **Current OpenAI Plugins (requested)** | Shared ChatGPT/Codex directory; skills, optional MCP server/tools and optional MCP Apps UI [O12, O14–O19]. | Root `plugin.json`, focused `skills/.../SKILL.md`; real SDK-backed MCP adapter and `mcp.json` only when callable tools are needed. | Personal/local/workspace and public distribution differ. Public MCP requires HTTPS and review. Account/workspace availability and Kural compatibility untested. |
 | OpenAI Responses remote MCP | Hosted MCP tool calls, `allowed_tools`, authorization and approval controls; current docs also describe Secure MCP Tunnel for private servers [O11]. | Reachable actual MCP server, or a supported private tunnel. | Local Agents SDK stdio is different from hosted remote access. Tunnel/product/workspace compatibility requires a separate check. |
 | xAI API function calling | Native xAI SDK and OpenAI-compatible API examples; application executes custom calls [X1, X2]. | Same local Kural dispatcher, with xAI request/output formatting. | Disable parallel calls and validate locally. “OpenAI-compatible” does not mean every OpenAI feature is supported. |
 | xAI API remote MCP | Native SDK, OpenAI-compatible Responses and Speech to Speech support; Streaming HTTP and SSE; tool allowlists, authorization and headers [X3]. | Reachable actual MCP server plus server-side authorization and approval. | **`require_approval` and `connector_id` are explicitly unsupported** in the OpenAI Responses compatibility path [X3]. Do not depend on OpenAI approval behavior. No xAI private-tunnel equivalent was verified. |
-| Consumer Grok bot | No arbitrary user-installed robot Actions/MCP path verified in accessible official material. | Unknown; use an explicitly identified API-based application instead. | Consumer documentation fetches were blocked; absence of verification is not proof that no feature exists. |
+| **Grok Bot (requested)** | Dedicated Bot docs verify custom MCP servers: Remote HTTPS and Command. Marketplace connectors, private skills, and routines are distinct. | A real SDK-backed MCP adapter, then actual Bot registration. | Team Bot Setup → Plugins → Add is documented. Personal custom-server form details and Kural account compatibility remain untested. See [exact Grok report](GROK-TOOLS-INTEGRATIONS.md). |
+| Grok at grok.com (separate surface) | Custom MCP connectors are documented. | Authenticated reachable MCP URL. | grok.com/connectors → New Connector → Custom. This is not the Bot or X setup. |
 
-### Important naming/version note
+## Verified current plugin building blocks
 
-Do not assume the old ChatGPT plugin beta is available. The historical retirement
-Help Center article could not be fetched (403). Also, on this research date,
-OpenAI's `/apps-sdk/` URLs **redirected to `/plugins/`**, whose current landing
-page describes a universal plugin directory for ChatGPT and Codex [O12]. The
-current developer-mode documentation still uses “apps” and “MCP,” while some
-connection instructions use “ChatGPT Plugins” [O8, O10]. This is evidence of the
-current documentation surface, **not evidence that the legacy plugin beta has
-returned**. Recheck the actual account UI and current publication requirements
-before selecting an app/plugin packaging route. Do not promise store acceptance.
+- **Skill:** a folder with YAML-frontmatter `SKILL.md` (`name`, `description`),
+  workflow instructions and optional `references/`, `scripts/` and `assets/`.
+  Skill metadata guides discovery; the full instructions load when relevant.
+  These OpenAI instruction skills are not automatically the 18 callable Kural
+  robot primitives. A skill explains the workflow; a server enforces actions
+  and authorization [O14, O16].
+- **MCP:** optional server exposes tools with input/output schemas, resources,
+  prompts and initialization instructions. Tools return text and/or
+  `structuredContent`. Production guidance is stable HTTPS with Streamable
+  HTTP. Official Python/TypeScript MCP SDKs are linked by the docs [O17].
+  Kural's existing JSON-lines `serve` command is not this protocol.
+- **Optional UI:** MCP Apps resources associated by `_meta.ui.resourceUri`;
+  iframe communicates by the `ui/*` JSON-RPC `postMessage` bridge. ChatGPT
+  `window.openai` extensions and `@openai/apps-sdk-ui` are optional, not an
+  execution or safety requirement [O18]. Do not add a robot dashboard by default.
+- **Package:** new packages use root `plugin.json` with Agent Plugins 1.0.0
+  `$schema`; fixed `skills/` and optional `mcp.json` paths. OpenAI presentation
+  settings go under `extensions.com.openai`. Compatibility packages using
+  `.codex-plugin/plugin.json`, `.mcp.json` and `.app.json` remain supported.
+  `.app.json` maps an already registered MCP connection/connector ID; it is not
+  the portable MCP configuration or an OpenAPI Actions spec [O19].
+- **Hooks:** optional lifecycle commands exist, but scripts must already exist
+  in the execution environment and non-managed hooks require explicit trust.
+  A web install does not deploy scripts. Kural needs no hooks [O14, O19].
 
-## Easiest first demo: a local, dry-run API tool call
+The old `/apps-sdk/` entry redirects to `/plugins`; some official GitHub/UI
+libraries retain Apps SDK names [O12, O21]. This is not a return of the retired
+ChatGPT plugin beta. The current portable manifest is `plugin.json`, not a
+legacy `ai-plugin.json`, and this is not a custom GPT configured with OpenAPI
+Actions. Actions cannot substitute for the requested installable skill/MCP
+package or its shared directory.
+
+The plugin changelog records **2026-03-25** distribution guidance: approved Apps
+SDK integrations could become Codex plugins; at that launch plugins were
+Codex-only [O22]. Today's landing, architecture and quickstart explicitly say
+ChatGPT **and** Codex. This research does not establish the exact later launch
+date of the shared ChatGPT directory. Use current docs, not that older limit.
+The linked `openai/plugins` repository currently demonstrates the compatibility
+layout, including Figma/Notion skills and `.app.json`/`.mcp.json` connections;
+its older examples do not override the newer portable-package guidance [O20].
+
+## Proposed minimal Kural plugin (not created)
+
+```text
+kural-dry-run/
+├── plugin.json
+├── skills/
+│   └── kural-dry-run/
+│       ├── SKILL.md
+│       └── references/        # reviewed catalog and dry-run/safety limits
+└── mcp.json                  # optional; only for a real approved MCP adapter
+```
+
+Minimal portable identity, not an implemented package:
+
+```json
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "kural-dry-run",
+  "version": "0.1.0",
+  "description": "Validate bounded Kural skill requests in dry-run mode only"
+}
+```
+
+For a future remote adapter, `mcp.json` would declare its **actual** endpoint:
+`{"$schema":"https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+"mcpServers":{"kural":{"type":"streamable-http","url":"<approved HTTPS MCP endpoint>"}}}`.
+The placeholder is not a deployable endpoint. The portable schema also defines
+stdio and legacy SSE shapes [O23], but this does not mean ChatGPT web can launch
+local commands or use the existing JSON-lines CLI as an MCP server.
+
+Proposed first MCP tools are `kural_capabilities` (honest dry-run mode/catalog)
+and `kural_dry_run_wave` (one allowlisted SDK call). These names and wrappers
+are proposals, not existing exports. The adapter must force `DryRunBackend`,
+validate inputs through the current SDK and return the actual operation result
+with **“validated dry run; no robot motion”**. Skill instructions teach tool
+order, ask for missing parameters, reject live/control-stream requests and
+never infer movement from an accepted dry run. Unsupported lifecycle methods
+must not be advertised as implemented. MCP/UI confirmation does not grant a
+robot owner lease, operator consent or clearance.
+
+No hooks, UI, autonomous velocity stream, gateway or live motion tool is needed
+for this first scope. A skills-only first package omits `mcp.json` and may teach
+catalog use/request planning; it must not claim it ran the SDK. Confirm the
+user's desired first workflow before implementing either shape.
+
+## Installation, auth, private access and publication
+
+1. **Personal MCP testing:** current developer-mode flow is Settings → Security
+   and login → Developer mode; ChatGPT Plugins → plus → MCP URL or Tunnel.
+   The quickstart installs the personal plugin, switches Chat to Work and uses
+   `@` to invoke it [O10, O15]. Current labels and account eligibility need a
+   real account check; this research did not perform one.
+2. **Private testing:** Secure MCP Tunnel can reach a private stdio/HTTP MCP
+   server without exposing it publicly [O10]. The tunnel still connects an
+   OpenAI host to that private service; it is not an offline-only setup or a
+   safety boundary. No tunnel/client/credential installation was performed.
+3. **Local/team package distribution:** documented repo/personal
+   `.agents/plugins/marketplace.json` catalogs support local/Git sources and
+   selected local clients, including Codex and the ChatGPT desktop app. These
+   are not the public directory, and local filesystem execution support must
+   not be assumed for ChatGPT web. Workspace admins can publish personal
+   plugins to selected roles; these remain inside that workspace [O19].
+4. **Authenticated MCP:** writes and private data require OAuth 2.1 per MCP
+   authorization, protected-resource/auth-server discovery, authorization code
+   + PKCE S256, appropriate client registration and token checks for issuer,
+   audience, expiry and scopes on every request. Prefer an established identity
+   provider. API-key auth from Actions is not transferable: this plugin guide
+   says ChatGPT cannot present custom API keys or machine-to-machine OAuth
+   grants. Client mTLS does not replace end-user OAuth or local approval [O13].
+5. **Public directory:** verified developer identity and publishing permission;
+   upload ZIP, resolve scans, connect/domain-verify MCP, review, then manually
+   publish the approved version. A stable public HTTPS MCP endpoint is required;
+   private tunnel testing does not meet this publication requirement [O10, O24].
+   Current submission supports only **one connected MCP server per plugin**,
+   rejects ZIPs containing `.app.json` app references or hooks, and does not
+   support adding MCP to an existing skills-only plugin. Include MCP
+   in the initial submission if that is the intended public shape. MCP review
+   asks for five positive and three negative cases, an accessible walkthrough
+   and a dedicated test account when needed. Published MCP tool updates are
+   scanned automatically; metadata/skills updates require a new ZIP/review.
+
+No public hosting, package install, credentials, review acceptance or Kural
+provider end-to-end execution is verified. Live robot access is separately
+blocked by the owner/gateway and safety gaps below; publishing a plugin cannot
+remove those gaps.
+
+## Optional API alternative: a local, dry-run function call (not requested)
 
 Proposed flow, not a demo run in this research:
 
@@ -117,10 +241,11 @@ driver must enforce execution and safety independently.
 
 ## Deployment paths after separate approval
 
-### ChatGPT custom GPT Actions: HTTP/OpenAPI
+### Optional, not requested: custom GPT Actions / HTTP / OpenAPI
 
-Use this when the goal is a custom GPT in the ChatGPT interface and a small REST
-API is sufficient. Proposed routes, **not currently implemented**, are:
+This is a different product path, retained only for reference. Do not implement
+it for the current Plugins request. It is useful only if the user separately
+chooses a custom GPT and a small REST API. Proposed routes, **not currently implemented**, are:
 
 - Catalog/capabilities: identify dry-run/live mode and supported skills.
 - Start: submit an allowlisted bounded skill and return an operation ID quickly.
@@ -142,10 +267,11 @@ reachable HTTPS service only after explicit deployment approval. No built-in
 private Actions tunnel was verified. Do not expose the native robot process or
 its control streams directly.
 
-### ChatGPT apps/MCP, or OpenAI Agents SDK MCP
+### Requested Plugins tool layer: thin MCP adapter
 
-Use MCP when several hosts should discover the same tools, or when a
-ChatGPT-native app connection is wanted. Implement a thin **real** MCP server
+Use MCP when the selected Kural plugin needs callable SDK-backed tools. The
+package and installation path are described above. Agents SDK MCP remains a
+separate optional API-hosted orchestration path, not the ChatGPT plugin setup. Implement a thin **real** MCP server
 around the existing SDK, not a replacement SDK. The JSON-lines CLI cannot be
 registered as an MCP stdio server without a protocol adapter.
 
@@ -163,12 +289,12 @@ user can remember approvals for a conversation [O8]. Therefore enforce local
 operator consent independently. OpenAI Responses remote MCP also has explicit
 approval requests [O11]; leave approval required for consequential operations.
 
-### Grok through xAI
+### Optional xAI API path (not the requested Grok Bot)
 
-Start with a local xAI API application calling the existing Python SDK. This
-can present a human CLI or another explicitly agreed application interface. It
-is not a feature installed in the consumer Grok bot. No extra agent framework
-is required for this first integration.
+Only if the user separately chooses an API application, a local xAI application
+can call the existing Python SDK. This is not the requested Grok Bot plugin
+integration. Use the [exact Grok Bot MCP path](GROK-TOOLS-INTEGRATIONS.md) for
+that product; do not replace it with API function calling.
 
 Later, a shared remote MCP adapter could serve xAI and OpenAI. xAI accepts
 `allowed_tools` in its Responses interface (`allowed_tool_names` in its native
@@ -254,20 +380,25 @@ changes nor proposes depth/perception work. Keep blocked skills blocked.
 
 ## Staged plan and exit criteria
 
-1. **Select surface:** confirm whether the user wants ChatGPT custom GPT,
-   ChatGPT app/MCP, an OpenAI API application, an xAI API application, or an
-   explicitly identified consumer Grok feature. Confirm local/private access and
-   single versus multiple users. Do not build competing adapters first.
-2. **Offline dry-run rehearsal:** inspect schemas and exercise SDK validation,
-   action status, unknown IDs, refusal, cancel and STOP without provider access.
-   All responses must explicitly indicate no runtime and no physical action.
-3. **One-provider dry-run function call:** after API approval, run the one-tool
-   flow above; test negative prompts, duplicate/parallel requests, timeouts and
-   honest narration. Evidence is tool selection/validation, not robot movement.
-4. **Approved transport demo:** implement only the selected thin OpenAPI or MCP
-   adapter, still forced dry-run. Test auth, permissions, expiry, disconnects,
-   approval, unknown operations and uncertain outcomes. Public hosting, tunnel
-   setup, dependencies and credentials each need explicit approval.
+1. **Select plugin workflow:** current OpenAI Plugins is the requested surface,
+   not Actions or a generic API application. Confirm skills-only planning versus
+   one callable dry-run MCP tool, target ChatGPT Work/web or desktop/Codex,
+   account policy, single-user versus workspace, and allowed private access.
+   For the requested Grok Bot, use its documented custom MCP setup and the same
+   reviewed adapter; do not substitute Grok Build or a generic xAI application.
+2. **Offline dry-run rehearsal:** inspect SDK schemas and exercise validation,
+   status, unknown IDs, refusal and supported lifecycle behavior without provider
+   access. All responses must explicitly indicate no runtime or physical action.
+3. **Approved package/adapter:** create only the agreed plugin shape. For MCP,
+   force dry-run mode, expose the smallest catalog/tool set and test initialization,
+   discovery, schemas and actual structured results. Do not rename the JSON-lines
+   CLI as MCP or advertise hypothetical lifecycle wrappers as working.
+4. **Approved plugin test:** after separate installation, transport and credential
+   approval, install personally/locally; evaluate skill activation, tool selection,
+   negative prompts, parallel/duplicate requests, expiry, permissions, disconnects
+   and honest results in the selected ChatGPT/Codex surface. A tunnel, public
+   hosting or directory submission needs separate approval. Evidence is dry-run
+   selection/validation, not robot movement or publication acceptance.
 5. **Separate runtime design review:** approve a single-owner gateway and local
    lifecycle contract without bypassing existing gates. Block any unsupported
    skill. This stage is not authorized by the present research.
@@ -280,8 +411,10 @@ changes nor proposes depth/perception work. Keep blocked skills blocked.
 
 ## Official sources and access failures
 
-All successful sources below were fetched over HTTPS with HTTP 200. These verify
-published API/product contracts, not this repository's interoperability.
+The cited OpenAI plugin guides, raw GitHub files and Agent Plugins schemas were
+fetched directly over HTTPS with HTTP 200. SDK and MCP Apps reference links are
+also listed as linked upstream resources, not separately tested implementations.
+These verify published product contracts, not this repository's interoperability.
 Model names, plan eligibility, UI labels and transports can change; pin and test
 the chosen versions before deployment.
 
@@ -311,6 +444,38 @@ the chosen versions before deployment.
   https://developers.openai.com/apps-sdk/ → https://developers.openai.com/plugins
 - **[O13]** Current app/plugin MCP OAuth authorization:
   https://developers.openai.com/plugins/build/auth
+- **[O14]** Current plugin architecture (skills, optional MCP/UI/hooks):
+  https://developers.openai.com/plugins/concepts/plugins
+- **[O15]** Current quickstart (personal plugin, ChatGPT Work and `@` invocation):
+  https://developers.openai.com/plugins/quickstart
+- **[O16]** Skill folders, metadata and workflow/tool boundary:
+  https://developers.openai.com/plugins/concepts/skills
+  https://developers.openai.com/plugins/build/skills
+- **[O17]** MCP concepts and linked official Python/TypeScript SDKs:
+  https://developers.openai.com/plugins/concepts/mcp-server
+  https://github.com/modelcontextprotocol/python-sdk
+  https://github.com/modelcontextprotocol/typescript-sdk
+- **[O18]** Optional MCP Apps UI and ChatGPT extensions:
+  https://developers.openai.com/plugins/build/chatgpt-ui
+  https://modelcontextprotocol.io/docs/extensions/apps
+- **[O19]** Current portable packaging, compatibility, marketplaces and workspace publishing:
+  https://developers.openai.com/plugins/build/plugins
+- **[O20]** Official plugin repository (read via raw GitHub HTTPS):
+  https://github.com/openai/plugins
+  https://raw.githubusercontent.com/openai/plugins/main/README.md
+  https://raw.githubusercontent.com/openai/plugins/main/plugins/figma/.codex-plugin/plugin.json
+  https://raw.githubusercontent.com/openai/plugins/main/plugins/figma/.app.json
+  https://raw.githubusercontent.com/openai/plugins/main/plugins/notion/.codex-plugin/plugin.json
+- **[O21]** Official MCP/UI examples (retains Apps SDK naming):
+  https://developers.openai.com/plugins/build/examples
+  https://raw.githubusercontent.com/openai/openai-apps-sdk-examples/main/README.md
+- **[O22]** Official plugin UI changelog (2026-03-25 Codex-only launch note):
+  https://developers.openai.com/plugins/changelog
+- **[O23]** Agent Plugins 1.0.0 schemas linked from OpenAI packaging docs:
+  https://agent-plugins.org/schemas/1.0.0/plugin.schema.json
+  https://agent-plugins.org/schemas/1.0.0/mcp.schema.json
+- **[O24]** Current upload/review/publication constraints and update flow:
+  https://developers.openai.com/plugins/deploy/submission
 - **[X1]** xAI custom function calling:
   https://docs.x.ai/developers/tools/function-calling
 - **[X2]** xAI tools overview:
@@ -330,6 +495,9 @@ Unavailable evidence:
   — **HTTP 403**; legacy retirement details were not independently fetched.
 - https://openai.com/index/introducing-gpts/ — **HTTP 403**.
 
-No unavailable page was treated as evidence of compatibility. Consumer Grok
-integration, the user's account entitlements, store publication and actual
-Kural/provider end-to-end execution remain unverified.
+The blocked legacy consumer URLs did not establish the available Grok Bot
+feature set. Later research used the official `https://docs.x.ai/llms.txt` index
+and dedicated Bot/consumer Markdown pages; it verified actual custom MCP paths.
+See [the exact Grok report](GROK-TOOLS-INTEGRATIONS.md). The user's account
+entitlements, Kural installation, store publication and actual end-to-end
+execution remain unverified.
