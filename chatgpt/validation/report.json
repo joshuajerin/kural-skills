@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-02T04:02:27.647418+00:00",
+  "checked_at_utc": "2026-10-02T04:08:27.906504+00:00",
   "scope": "chatgpt/ portable plugin documents only; not provider installation or robot execution",
   "sources": [
     {
@@ -45,7 +45,7 @@
     "packaging": {
       "status": "pass",
       "deterministic_two_builds": true,
-      "sha256": "4c5c2f82f01c5c54cca56ca2c89434c9791f644e8419a21bd54908b167611486",
+      "sha256": "95f87bbb0d62d5cf70272f784679223a8a143d67c294997353e948e72a12379b",
       "entries": [
         "README.md",
         "mcp.json",
@@ -55,12 +55,32 @@
       "inside_folder_output_rejected": true,
       "inside_folder_rejection_exit_code": 2,
       "zip_assets_included": false
+    },
+    "root_adapter_verification": {
+      "source": "parent root test confirmation; not rerun by this folder",
+      "tests_passed": 46,
+      "tools": 20,
+      "transport": "argument-free stdio only",
+      "forced_backend": "DryRunBackend",
+      "capabilities_keys": [
+        "protocol",
+        "version",
+        "mode",
+        "no_live_backend",
+        "tools",
+        "skills",
+        "limitations"
+      ],
+      "action_structured_content": {
+        "mode": "dry_run",
+        "execution": "validated intent only; no robot motion",
+        "result": "SDK SkillResult.as_dict()"
+      }
     }
   },
-  "adapter_status": "local stdio adapter verified separately: 46 native tests; provider installation not verified",
+  "adapter_status": "local stdio MCP adapter verified separately by root: 46 native tests passed, including real protocol tests; 20 tools and forced dry run; platform installation not verified",
   "not_verified": [
     "MCP initialization/discovery/call by this folder",
-    "installed entrypoint",
     "ChatGPT/Codex client compatibility or plugin activation",
     "account/workspace eligibility",
     "Secure MCP Tunnel",
