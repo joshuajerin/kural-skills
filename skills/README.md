@@ -1,7 +1,9 @@
 # Skills
 
-No skills have been defined yet.
+[Phase 1](phase1/README.md) defines basic base movement, lift actions, and the
+existing named gestures. Its Python/CLI callable layer is implemented; execution
+is dry-run only until a reviewed robot gateway is integrated.
 
-Add one directory per skill: `skills/<skill-name>/`. Start with a README using
-the definition checklist in the repository's root README. Add implementation and
-tests only when the behavior and required robot interfaces are agreed.
+New skills get one directory per skill or coherent family. Define purpose,
+inputs/outputs, prerequisites, behavior, cancellation/failure, verification,
+and status before adding implementation. Reuse the shared SDK dispatcher.

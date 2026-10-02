@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=70"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kural-skills"
+version = "0.1.0"
+description = "Small callable robot skills for Kural"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+kural-skills = "kural_skills.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

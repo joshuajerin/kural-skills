@@ -2,9 +2,11 @@
 
 ## Purpose
 
-Build a clear, small foundation for Kural robot skills. The initial repository
-contains documentation only; do not assume any skill or runtime integration
-already exists.
+Build a clear, small foundation for Kural robot skills. Phase 1 includes a Python
+SDK, JSON CLI, tool schemas, and a dry-run backend. Live robot integration is NOT
+implemented or verified. Read docs/RUNTIME-CONTRACT.md before any adapter work.
+Run tests in this repository's own .venv environment. Do not run live motion or
+work on depth/perception as part of these skills changes.
 
 ## Working rules
 
